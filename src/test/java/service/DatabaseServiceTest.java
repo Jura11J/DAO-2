@@ -3,6 +3,7 @@ package service;
 import dao.hibernate.CourseHibernate;
 import dao.hibernate.GradeHibernate;
 import dao.hibernate.StudentHibernate;
+import dao.hibernate.GradeChangeHibernate;
 import dao.jdbc.CourseJDBC;
 import dao.jdbc.GradeJDBC;
 import dao.jdbc.StudentJDBC;
@@ -22,7 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseServiceTest {
 
-    static DatabaseService databaseService = new DatabaseService(new StudentHibernate(),new CourseHibernate(), new GradeHibernate());
+    DatabaseService databaseService;
+    @BeforeEach
+    void setUp() {
+        this.databaseService = new DatabaseService(new StudentHibernate(),new CourseHibernate(), new GradeHibernate());
+    }
 
     @AfterEach
     void tearDown() {
@@ -102,5 +107,11 @@ class DatabaseServiceTest {
     @Test
     void unenrollStudent() {
         assertDoesNotThrow(() -> databaseService.unenrollStudent(1,1));
+    }
+
+    @Test
+    void shouldLogGradeChange() {
+        databaseService.logChange(databaseService.getStudent(1), databaseService.getCourse(1), 5, 3);
+
     }
 }

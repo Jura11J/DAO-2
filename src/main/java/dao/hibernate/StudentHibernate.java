@@ -85,14 +85,28 @@ public class StudentHibernate implements StudentDAO {
 
     @Override
     public void deleteStudent(Student student) {
+
+        if (transaction == null || !transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
+        if (student == null) {
+            return;
+        }
+
+
         Student managed = student;
         if (!session.contains(student)) {
             managed = session.get(Student.class, student.getId());
         }
+
+
         if (managed != null) {
             session.remove(managed);
+            session.flush();    
         }
     }
+
 
     @Override
     public List<Course> getEnrolledCourses(Student student) {

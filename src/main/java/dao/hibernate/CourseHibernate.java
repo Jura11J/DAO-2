@@ -39,11 +39,18 @@ public class CourseHibernate implements CourseDAO {
 
     @Override
     public Course addCourse(String courseName) {
+
+        if (transaction == null || !transaction.isActive()) {
+            transaction = session.beginTransaction();
+        }
+
         Course course = new Course(courseName);
         session.persist(course);
         session.flush();
+
         return course;
     }
+
 
 
     @Override
@@ -94,7 +101,7 @@ public class CourseHibernate implements CourseDAO {
 
         if (managed != null) {
             session.remove(managed);
-            session.flush();   // ważne: fizycznie wyślij DELETE do bazy
+            session.flush();
         }
     }
 

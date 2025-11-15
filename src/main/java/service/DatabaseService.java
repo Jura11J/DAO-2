@@ -3,6 +3,7 @@ package service;
 import dao.CourseDAO;
 import dao.GradeDAO;
 import dao.StudentDAO;
+import dao.hibernate.GradeChangeHibernate;
 import model.Course;
 import model.Grade;
 import model.Student;
@@ -14,11 +15,13 @@ public class DatabaseService {
     private final StudentDAO studentDAO;
     private final CourseDAO courseDAO;
     private final GradeDAO gradeDAO;
+    private final GradeChangeHibernate gradeChangeDAO;
 
     public DatabaseService(StudentDAO studentDAO, CourseDAO courseDAO, GradeDAO gradeDAO) {
         this.studentDAO = studentDAO;
         this.courseDAO = courseDAO;
         this.gradeDAO = gradeDAO;
+        this.gradeChangeDAO = new GradeChangeHibernate();
     }
 
     public void commit() {
@@ -136,6 +139,13 @@ public class DatabaseService {
         Student student = getStudent(studentId);
         Course course = getCourse(courseId);
         gradeDAO.unenrollStudent(student, course);
+
+    }
+
+    public void logChange(Student student,
+                          Course course,
+                          int oldGrade,
+                          int newGrade) {
 
     }
 }

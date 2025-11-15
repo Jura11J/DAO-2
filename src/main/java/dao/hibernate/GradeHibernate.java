@@ -37,7 +37,7 @@ public class GradeHibernate implements GradeDAO {
 
     @Override
     public Grade enrollStudent(Student student, Course course) {
-        // upewniamy się, że student i course są „managed”
+
         if (!session.contains(student)) {
             student = session.get(Student.class, student.getId());
         }
@@ -45,7 +45,7 @@ public class GradeHibernate implements GradeDAO {
             course = session.get(Course.class, course.getId());
         }
 
-        // tworzymy Grade z nullem jako oceną (samo zapisanie zapisuje „zapisanie na kurs”)
+
         Grade grade = new Grade(student, course, null);
         session.persist(grade);
         return grade;
@@ -64,8 +64,7 @@ public class GradeHibernate implements GradeDAO {
         Grade g = getGrade(student, course);
         if (g != null) {
             g.setGrade(gradeValue);
-            // g jest managed (bo przyszło z sesji), więc wystarczy zmienić pole
-            // można też dać session.merge(g), ale nie jest konieczne
+
         }
     }
 
@@ -75,10 +74,17 @@ public class GradeHibernate implements GradeDAO {
             return null;
         }
 
+        var query = session.createQuery(
+                "FROM Grade g WHERE g.student.id = :sid AND g.course.id = :cid",
+                Grade.class
+        );
+        query.setParameter("sid", student.getId());
+        query.setParameter("cid", course.getId());
 
-        GradeId id = new GradeId(student.getId(), course.getId());
-        return session.get(Grade.class, id);
+        var result = query.getResultList();
+        return result.isEmpty() ? null : result.get(0);
     }
+
 
 
     @Override

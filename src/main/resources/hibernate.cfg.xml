@@ -13,6 +13,7 @@
         <mapping class="model.Student"/>
         <mapping class="model.Course"/>
         <mapping class="model.Grade"/>
+        <mapping class="model.GradeChange"/>
     </session-factory>
 
 </hibernate-configuration>
