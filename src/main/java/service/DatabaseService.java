@@ -126,7 +126,10 @@ public class DatabaseService {
     public void updateGrade(int studentId, int courseId, int grade) {
         Student student = getStudent(studentId);
         Course course = getCourse(courseId);
+
+        int oldValue = 1;
         gradeDAO.updateGrade(student, course, grade);
+        gradeChangeDAO.logChange(student, course, oldValue, grade);
     }
 
     public Grade getGrade(int studentId, int courseId) {

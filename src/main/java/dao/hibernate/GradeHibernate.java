@@ -64,8 +64,8 @@ public class GradeHibernate implements GradeDAO {
         Grade g = getGrade(student, course);
         if (g != null) {
             g.setGrade(gradeValue);
-
         }
+
     }
 
     @Override
